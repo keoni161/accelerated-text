@@ -48,6 +48,7 @@ unit-test-api:
   image: clojure:tools-deps-alpine
   when: always
   script:
+    - ls -al
     - cd api
     - clojure -Sdeps '{:mvn/local-repo "./.m2/repository"}' -A:test -e integration
 
