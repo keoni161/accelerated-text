@@ -28,6 +28,7 @@
              {:jvm-opts    ["-Daws.region=eu-central-1"
                             "-Daws.accessKeyId=DEV"
                             "-Daws.secretKey=DEV"]
+              :extra-deps  {org.clojure/test.check {:mvn/version "0.10.0"}}
               :extra-paths ["spec" "test" "test/resources"]}
              :test
              {:extra-paths ["test"]
