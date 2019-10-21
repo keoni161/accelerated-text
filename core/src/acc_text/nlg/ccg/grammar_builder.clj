@@ -3,7 +3,8 @@
             [acc-text.nlg.grammar :as ccg]
             [acc-text.nlg.grammar-generation.translate :as translate]
             [acc-text.nlg.spec.morphology :as morph-spec]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [acc-text.nlg.ccg.base-en :as base-en]))
 
 (defn placeholder [kw] (format "{{%s}}" (-> kw name string/upper-case)))
 
@@ -42,10 +43,13 @@
                           {:types (ccg/build-types [{:name "sem-obj"} {:name "phys-obj" :parents "sem-obj"}])
                            :rules (ccg/build-default-rules)})
         morphology (data-morphology sem-graph)
-        families (base-families morphology)]
+        families
+        (concat base-en/initial-families (base-families morphology))]
     (grammar-builder
       (ccg/build-lexicon
         {:families (map translate/family->entry families)
          :morph    (map translate/morph->entry morphology)
-         :macros   []})
-      )))
+         :macros   []}))))
+
+(defn realize-data-templates [grammar data]
+  (ccg/generate grammar "{{TITLE}}" "{{GOOD}}"))
