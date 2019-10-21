@@ -1,5 +1,5 @@
 (ns acc-text.nlg.ccg.grammar-builder-test
-  (:require [api.scratchpad :as sut]
+  (:require [acc-text.nlg.ccg.grammar-builder :as sut]
             [clojure.test :refer [deftest is]]
             [acc-text.nlg.spec.lexicon :as lex-spec]
             [acc-text.nlg.spec.morphology :as morph-spec]))
