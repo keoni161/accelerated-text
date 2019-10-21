@@ -100,11 +100,14 @@
   ([mode category1 category2] {:complex-cat [category1 [\/ mode] category2]}))
 
 (defn morph-entry
-  [word pos {:keys [class stem macros]}]
-  #::morph-spec{:word      word
-                :pos       pos
-                :class     class
-                :predicate stem
-                :macros    macros})
+  ([word pos {:keys [class stem macros]}]
+   #::morph-spec{:word      word
+                 :pos       pos
+                 :class     class
+                 :predicate stem
+                 :macros    macros})
+  ([word pos] #::morph-spec{:word  word
+                            :pos   pos
+                            :class nil :predicate nil :macros nil}))
 
 (defn macro [name fs] #::morph-spec{:name name :fs fs})

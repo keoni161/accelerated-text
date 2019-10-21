@@ -1,6 +1,7 @@
 (ns api.test-utils
   (:require [api.server :as server]
             [api.utils :as utils]
+            [ubergraph.core :as uber]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
             [jsonista.core :as json])
@@ -33,3 +34,8 @@
 (defn load-test-document-plan [filename]
   (with-open [r (io/reader (format "test/resources/document_plans/%s.edn" filename))]
     (edn/read (PushbackReader. r))))
+
+(defn plan-graph [semantic-graph]
+  (apply uber/graph (map (fn [[from rel to]] [from to {:name rel}]) (:relations semantic-graph))))
+
+(defn vizgraph [uber-graph] (uber/viz-graph uber-graph))

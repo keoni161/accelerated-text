@@ -1,4 +1,4 @@
-(ns api.scratchpad
+(ns api.parser
   (:require [clojure.string :as string]))
 
 (defn update-semantic-graph

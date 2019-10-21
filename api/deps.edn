@@ -14,6 +14,7 @@
              net.sf.extjwnl/extjwnl              {:mvn/version "2.0.2"}
              net.sf.extjwnl/extjwnl-data-wn31    {:mvn/version "1.2"}
              metosin/jsonista                    {:mvn/version "0.2.2"}
+             ubergraph                           {:mvn/version "0.8.1"}
              org.clojure/clojure                 {:mvn/version "1.10.1"}
              org.clojure/data.csv                {:mvn/version "0.1.4"}
              org.clojure/tools.logging           {:mvn/version "0.4.1"}
