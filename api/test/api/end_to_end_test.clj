@@ -83,7 +83,7 @@
     (is (some? result-id))
     (is (some? (first (get-variants result-id))))))
 
-(deftest ^:integration author-amr-with-adjective-plan-generation
+#_(deftest ^:integration author-amr-with-adjective-plan-generation
   (let [{{result-id :resultId} :body status :status}
         (q "/nlg" :post {:documentPlanId   "5"
                          :readerFlagValues {}
