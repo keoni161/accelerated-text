@@ -64,7 +64,7 @@
   "Generates multiple of valid sentences from given array of tokens"
   [^Grammar grammar & tokens]
   (combinator/reset-indices)
-  (let [signs (flatten (map (partial utils/str->sign grammar) tokens))
+  (let [signs (mapcat #(utils/str->sign grammar %) tokens)
         combinations (combinator/combinate grammar signs max-depth)
         ;;If we have one token in then we are likely dealing with partial sentences,
         ;;generated for a simple statement plans. Like {{TITLE}}
