@@ -232,19 +232,14 @@
         macros        []]
     (map
       (fn [frame]
-        (let [grammar-builder (grammar/build-grammar {:types (grammar/build-types (list
-                                                                                    {:name "sem-obj"}
-                                                                                    {:name "phys-obj" :parents "sem-obj"}))
-                                                      :rules (grammar/build-default-rules)})
-              lex             (frame->complex-categories (:id vn) frame)
+        (let [lex             (frame->complex-categories (:id vn) frame)
               implicit        (map (fn [[word pos]] (translate/morph->entry
                                                       (morph-entry word pos {:stem word})))
                                    (->> frame
                                         (:syntax)
-                                        (extract-implicit)))
-              lexicon         (grammar/build-lexicon
-                                {:families (map translate/family->entry (concat base-families lex))
-                                 :morph    (concat morph-entries implicit)
-                                 :macros   (map translate/macro->entry macros)})]
-          (grammar-builder lexicon)))
+                                        (extract-implicit)))]
+          (grammar/build-grammar (map translate/family->entry (concat base-families lex))
+                                 (concat morph-entries implicit)
+                                 (map translate/macro->entry macros)
+                                 )))
       (:frames vn))))

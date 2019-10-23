@@ -42,15 +42,9 @@
 (defn compile-custom-grammar
   [values]
   (log/debugf "Dynamic values: %s" (pr-str values))
-  (let [grammar-builder (ccg/build-grammar
-                         {:types (ccg/build-types [{:name "sem-obj"}
-                                                   {:name "phys-obj" :parents "sem-obj"}])
-                          :rules (ccg/build-default-rules)})
-        grouped            (group-by (fn [item] (get-in item [:attrs :type])) values)
+  (let [grouped            (group-by (fn [item] (get-in item [:attrs :type])) values)
         morphology-context (map resolve-morph-context (vals grouped))
-        generated-families (map-indexed resolve-lex-context grouped)
-        lexicon            (ccg/build-lexicon
-                            {:families (map translate/family->entry (concat base-en/initial-families generated-families))
-                             :morph    (map translate/morph->entry (concat base-en/initial-morph (flatten morphology-context)))
-                             :macros   []})]
-    (grammar-builder lexicon)))
+        generated-families (map-indexed resolve-lex-context grouped)]
+    (ccg/build-grammar (map translate/family->entry (concat base-en/initial-families generated-families))
+                       (map translate/morph->entry (concat base-en/initial-morph (flatten morphology-context)))
+                       [])))

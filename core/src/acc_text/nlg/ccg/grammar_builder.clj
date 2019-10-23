@@ -41,22 +41,29 @@
         (dsl/member word)))
     morphology))
 
-(defn build-grammar [sem-graph]
-  (let [grammar-builder (ccg/build-grammar
-                          {:types (ccg/build-types [{:name "sem-obj"} {:name "phys-obj" :parents "sem-obj"}])
-                           :rules (ccg/build-default-rules)})
-        morphology (data-morphology sem-graph)
-        families
-        (concat base-en/initial-families (base-families morphology))]
-    (grammar-builder
-      (ccg/build-lexicon
-        {:families (map translate/family->entry families)
-         :morph    (map translate/morph->entry morphology)
-         :macros   []}))))
+;; (defn build-grammar [sem-graph]
+;;   (let [grammar-builder (ccg/build-grammar
+;;                           {:types (ccg/build-types [{:name "sem-obj"} {:name "phys-obj" :parents "sem-obj"}])
+;;                            :rules (ccg/build-default-rules)})
+;;         morphology (data-morphology sem-graph)
+;;         families (concat base-en/initial-families (base-families morphology))]
+;;     (grammar-builder
+;;       (ccg/build-lexicon
+;;         {:families (map translate/family->entry families)
+;;          :morph    (map translate/morph->entry morphology)
+;;          :macros   []}))))
 
-(defn realize-data-templates [grammar data]
-  (let [lf (lf-builder/parse nil)])
-  (ccg/generate grammar "{{TITLE}}" "{{GOOD}}"))
+(defn build-grammar [sem-graph]
+  (let [morphology (data-morphology sem-graph)
+        families (concat base-en/initial-families (base-families morphology))]
+
+    (ccg/build-grammar (map translate/family->entry families)
+                       (map translate/morph->entry morphology)
+                       [])
+    ))
+
+(defn realize-data-templates [grammar]
+  (ccg/generate grammar "{{GOOD}}" "{{TITLE}}"))
 
 (defn realize [grammar lf]
   (let [lf (Realizer/getLfFromElt lf)

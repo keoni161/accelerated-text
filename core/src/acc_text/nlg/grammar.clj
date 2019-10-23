@@ -15,18 +15,6 @@
 
 (defn element->MacroItem [el] (new MacroItem el))
 
-(defn build-lexicon [{:keys [families morph macros]}]
-  (fn [grammar]
-    (let [builder (LexiconBuilder/builder)]
-      (log/debug "Linking initial Lexicon")
-      (.withLexicon grammar (.ref builder)) ;; Link Lexicon with Grammar
-      (doseq [f families] (.addFamily builder f))
-      (doseq [m morph] (.addMorph builder (element->MorphItem m)))
-      (doseq [m macros] (.addMacro builder (element->MacroItem m)))
-      (log/debugf "Lexicon with %d families, %d morph, %d macros"
-                  (count families) (count morph) (count macros))
-      (.build builder))))
-
 (defn build-types [types]
   (let [builder (TypesBuilder/builder)]
     (doseq [{:keys [name parents]} types]
@@ -43,16 +31,24 @@
 (defn build-default-rules []
   (build-rules [(ForwardApplication.) (BackwardApplication.)]))
 
-(defn build-grammar [{:keys [rules types]}]
-  (log/debugf "Adding types: %s" (pr-str (map #(.getName %) (.getIndexMap types))))
-  (let [builder (-> (GrammarBuilder/builder)
-                    (.withRules rules)
-                    (.withTypes types))]
-    (log/debugf "Global grammar initialized? %s" (.isGlobalGrammarInit builder))
-    (log/info "Have initial grammar")
-    (fn [lexicon]
-      (lexicon builder) ;; Link Lexicon with Grammar
-      (.build builder))))
+(defn lexicon-builder [families morph macros]
+  (let [builder (LexiconBuilder/builder)]
+    (doseq [f families] (.addFamily builder f))
+    (doseq [m morph] (.addMorph builder (element->MorphItem m)))
+    (doseq [m macros] (.addMacro builder (element->MacroItem m)))
+    builder))
+
+(defn build-grammar [families morph macros]
+  (let [types           (build-types [{:name "sem-obj"} {:name "phys-obj" :parents "sem-obj"}])
+        rules           (build-default-rules)
+        grammar-builder (-> (GrammarBuilder/builder)
+                            (.withRules rules)
+                            (.withTypes types))
+        lexicon-builder (lexicon-builder families morph macros)]
+
+    (.withLexicon grammar-builder (.ref lexicon-builder)) ;; Link Lexicon with Grammar
+    (.build lexicon-builder)
+    (.build grammar-builder)))
 
 (def max-depth
   (or (utils/str->int (System/getenv "MAX_DEPTH")) 7))
