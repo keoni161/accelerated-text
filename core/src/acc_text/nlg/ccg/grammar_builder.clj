@@ -1,6 +1,9 @@
 (ns acc-text.nlg.ccg.grammar-builder
+  (:import opennlp.ccg.grammar.Grammar
+           opennlp.ccg.realize.Realizer)
   (:require [acc-text.nlg.dsl.core :as dsl]
             [acc-text.nlg.grammar :as ccg]
+            [acc-text.nlg.ccg.lf-builder :as lf-builder]
             [acc-text.nlg.grammar-generation.translate :as translate]
             [acc-text.nlg.spec.morphology :as morph-spec]
             [clojure.string :as string]
@@ -52,5 +55,11 @@
          :macros   []}))))
 
 (defn realize-data-templates [grammar data]
+  (let [lf (lf-builder/parse nil)])
   (ccg/generate grammar "{{TITLE}}" "{{GOOD}}"))
+
+(defn realize [grammar lf]
+  (let [lf (Realizer/getLfFromElt lf)
+        r (Realizer. grammar)]
+    (.realize r lf nil)))
 
