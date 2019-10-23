@@ -58,7 +58,7 @@
   (when value (.setAttribute element name value))
   element)
 
-(defn- add-content [element values]
+(defn add-content [element values]
   (when values (.addContent element values))
   element)
 
