@@ -3,7 +3,6 @@
            opennlp.ccg.realize.Realizer)
   (:require [acc-text.nlg.dsl.core :as dsl]
             [acc-text.nlg.grammar :as ccg]
-            [acc-text.nlg.ccg.lf-builder :as lf-builder]
             [acc-text.nlg.grammar-generation.translate :as translate]
             [acc-text.nlg.spec.morphology :as morph-spec]
             [clojure.string :as string]
@@ -41,26 +40,13 @@
         (dsl/member word)))
     morphology))
 
-;; (defn build-grammar [sem-graph]
-;;   (let [grammar-builder (ccg/build-grammar
-;;                           {:types (ccg/build-types [{:name "sem-obj"} {:name "phys-obj" :parents "sem-obj"}])
-;;                            :rules (ccg/build-default-rules)})
-;;         morphology (data-morphology sem-graph)
-;;         families (concat base-en/initial-families (base-families morphology))]
-;;     (grammar-builder
-;;       (ccg/build-lexicon
-;;         {:families (map translate/family->entry families)
-;;          :morph    (map translate/morph->entry morphology)
-;;          :macros   []}))))
-
 (defn build-grammar [sem-graph]
   (let [morphology (data-morphology sem-graph)
         families (concat base-en/initial-families (base-families morphology))]
 
     (ccg/build-grammar (map translate/family->entry families)
                        (map translate/morph->entry morphology)
-                       [])
-    ))
+                       [])))
 
 (defn realize-data-templates [grammar]
   (ccg/generate grammar "{{GOOD}}" "{{TITLE}}"))
