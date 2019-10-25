@@ -174,12 +174,9 @@
                          ::lex-spec/diamonds]}]
   (build-custom-el {:name "lf"
                     :children
-                    [(build-custom-el {:name "satop" :attrs {:nomvar "X"}
+                    [(build-custom-el {:name "satop" :attrs {:nomvar nomvar}
                                        :children
-                                       [#_(build-custom-el {:name     "prop"
-                                                          :attrs    {:name "{{TITLE}}"}
-                                                          :children []})
-                                        (build-custom-el {:name     "diamond"
+                                       [(build-custom-el {:name     "diamond"
                                                           :attrs    {:mode "Mod"}
                                                           :children [(build-custom-el {:name "nomvar" :attrs {:name "M"}})
                                                                      (build-custom-el {:name     "prop"
@@ -189,23 +186,25 @@
 
 (defn logical-form->entry [{:keys [::lex-spec/nomvar
                                    ::lex-spec/predicate
-                                   ::lex-spec/diamonds]}]
-  (if (nil? diamonds)
+                                   ::lex-spec/diamonds] :as lf}]
+  (cond
+    (= 0 (count diamonds))
     (build-custom-el {:name "lf"
                       :children
-                      [(build-custom-el {:name "satop" :attrs {:nomvar "X"}
+                      [(build-custom-el {:name "satop" :attrs {:nomvar nomvar}
                                          :children
                                          [(build-custom-el {:name     "prop"
                                                             :attrs    {:name "[*DEFAULT*]"}
                                                             :children []})
                                           ]})]})
-    (lf->entry nil)
-    
-    #_(build-lf
+    (= 1 (count diamonds)) (lf->entry lf)
+
+    :else
+    (build-lf
       (build-satop nomvar
                    (->> (map diamond->entry diamonds)
                         (remove nil?) ;; If diamond doesn't have any children - we don't build it and we get null. Remove those
-                        (cons-fn build-prop predicate))))))
+                              (cons-fn build-prop predicate))))))
 
 (defn feature->entry
   [{:keys [::fs-spec/attribute

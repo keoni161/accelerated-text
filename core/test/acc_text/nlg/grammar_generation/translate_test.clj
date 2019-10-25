@@ -50,32 +50,32 @@
                     (tr/build-diamond "concrete" (tr/build-prop "true")))]
       (compare-elements expected result))))
 
-(deftest translate-lf
-  (testing "simple lf"
-    (let [result (tr/logical-form->entry (dsl/lf "P:shoe"))
-          expected (tr/build-lf
-                    (tr/build-satop "P:shoe" (tr/build-prop "[*DEFAULT*]")))]
-      (compare-elements expected result)))
-  (testing "nested lf"
-    (let [result (tr/logical-form->entry (dsl/lf "U" nil
-                                              (dsl/diamond "concrete" {:prop "true"})
-                                              (dsl/diamond "gum-domain" {:nomvar "T"})
-                                              (dsl/diamond "gum-attribute"
-                                                           {:prop "[*DEFAULT*]"
-                                                            :nomvar "P:gum-Color"
-                                                            :diamond (dsl/diamond "concrete" {:prop "true"})})))
-          expected (tr/build-lf
-                    (tr/build-satop "U"
-                                    (tr/build-diamond "concrete"
-                                                      (tr/build-prop "true"))
-                                    (tr/build-diamond "gum-domain"
-                                                (tr/build-nomvar "T"))
-                                    (tr/build-diamond "gum-attribute"
-                                                      (tr/build-nomvar "P:gum-Color")
-                                                      (tr/build-prop "[*DEFAULT*]")
-                                                      (tr/build-diamond "concrete"
-                                                                        (tr/build-prop "true")))))]
-      (compare-elements expected result))))
+(deftest translate-simple-lf
+  (let [result   (tr/logical-form->entry (dsl/lf "P:shoe"))
+        expected (tr/build-lf
+                   (tr/build-satop "P:shoe" (tr/build-prop "[*DEFAULT*]")))]
+    (compare-elements expected result)))
+
+(deftest translate-nested-lf
+  (let [result   (tr/logical-form->entry (dsl/lf "U" nil
+                                                 (dsl/diamond "concrete" {:prop "true"})
+                                                 (dsl/diamond "gum-domain" {:nomvar "T"})
+                                                 (dsl/diamond "gum-attribute"
+                                                              {:prop    "[*DEFAULT*]"
+                                                               :nomvar  "P:gum-Color"
+                                                               :diamond (dsl/diamond "concrete" {:prop "true"})})))
+        expected (tr/build-lf
+                   (tr/build-satop "U"
+                                   (tr/build-diamond "concrete"
+                                                     (tr/build-prop "true"))
+                                   (tr/build-diamond "gum-domain"
+                                                     (tr/build-nomvar "T"))
+                                   (tr/build-diamond "gum-attribute"
+                                                     (tr/build-nomvar "P:gum-Color")
+                                                     (tr/build-prop "[*DEFAULT*]")
+                                                     (tr/build-diamond "concrete"
+                                                                       (tr/build-prop "true")))))]
+    (compare-elements expected result)))
 
 
 (deftest translate-atomcat

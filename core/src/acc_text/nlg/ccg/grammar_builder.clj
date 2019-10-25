@@ -38,7 +38,7 @@
              pos
              true
              (dsl/entry "primary"
-                        (dsl/lf "[*DEFAULT*]")
+                        (dsl/lf word (dsl/prop "[*DEFAULT*]"))
                         (dsl/atomcat pos {:index 2} (dsl/fs-nomvar "index" "X")))
              (dsl/member word))))))
 
@@ -49,7 +49,10 @@
               (dsl/entry
                 "Primary"
                 (dsl/lf "X"
-                           (dsl/diamond "Mod" {:nomvar "M"}))
+                        (dsl/prop "[*DEFAULT*]")
+                        (dsl/diamond "Mod" {:nomvar "M"
+                                            :prop (dsl/prop "[*DEFAULT*]")
+                                            }))
                 (dsl/>F
                   \^
                   (dsl/atomcat :NP {:inherits-from 2} (dsl/fs-nomvar "mod-index" "M"))
@@ -58,7 +61,7 @@
 (defn build-grammar [sem-graph]
   (let [morphology (data-morphology sem-graph)
         families   (conj (base-families morphology) (adj-family))
-        ;;(concat base-en/initial-families (base-families morphology))
+        #_(concat base-en/initial-families (base-families morphology))
         ]
 
     (ccg/build-grammar (map translate/family->entry families)

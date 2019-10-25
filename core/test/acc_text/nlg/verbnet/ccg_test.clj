@@ -10,12 +10,12 @@
 (def battle (vnet/xml->vclass "test/resources/verbnet/battle.xml"))
 
 (deftest vnet->morph
-  (is (= #{#::morph-spec{:word "vie" :pos :VB :predicate "battle" :macros nil :class nil}
-           #::morph-spec{:word "war" :pos :VB :predicate "battle" :macros nil :class nil}
-           #::morph-spec{:word "wrangle" :pos :VB :predicate "battle" :macros nil :class nil}
-           #::morph-spec{:word "{{AGENT}}" :pos :N :predicate "Agent" :macros nil :class nil}
-           #::morph-spec{:word "{{CO-AGENT}}" :pos :N :predicate "Co-Agent" :macros nil :class nil}
-           #::morph-spec{:word "{{THEME}}" :pos :N :predicate "Theme" :macros nil :class nil}}
+  (is (= #{#::morph-spec{:word "vie" :pos :VB :predicate "battle" :macros nil :class nil :stem "battle"}
+           #::morph-spec{:word "war" :pos :VB :predicate "battle" :macros nil :class nil :stem "battle"}
+           #::morph-spec{:word "wrangle" :pos :VB :predicate "battle" :macros nil :class nil :stem "battle"}
+           #::morph-spec{:word "{{AGENT}}" :pos :N :predicate "Agent" :macros nil :class nil :stem "Agent"}
+           #::morph-spec{:word "{{CO-AGENT}}" :pos :N :predicate "Co-Agent" :macros nil :class nil :stem "Co-Agent"}
+           #::morph-spec{:word "{{THEME}}" :pos :N :predicate "Theme" :macros nil :class nil :stem "Theme"}}
          (set (ccg/vclass->morph battle)))))
 
 (deftest depth-test
