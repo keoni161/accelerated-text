@@ -29,3 +29,8 @@
           (translate/add-content lf-xml (.toXml lf)))))
     (print (xml-print lf-xml))
     lf-xml))
+
+(defn family->xml [family]
+  (print 
+    (-> family
+        translate/family->entry (.getEntries) first .getCat .toXml xml-print)))
