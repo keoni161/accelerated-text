@@ -79,7 +79,7 @@
 
 (defn build-entry
   [{:keys [name stem index-rel active category]}]
-  (log/tracef "Got entry to build, name: %s stem: %s index-rel: %s active: %s category: %s"
+  (log/debugf "Got entry to build, name: %s stem: %s index-rel: %s active: %s category: %s"
               name stem index-rel active category)
   (-> (new Element "entry")
       (set-attr "name" name)
@@ -169,14 +169,43 @@
     (when (seq? children)
       (apply (partial build-diamond mode) children))))
 
+(defn lf->entry [{:keys [::lex-spec/nomvar
+                         ::lex-spec/predicate
+                         ::lex-spec/diamonds]}]
+  (build-custom-el {:name "lf"
+                    :children
+                    [(build-custom-el {:name "satop" :attrs {:nomvar "X"}
+                                       :children
+                                       [#_(build-custom-el {:name     "prop"
+                                                          :attrs    {:name "{{TITLE}}"}
+                                                          :children []})
+                                        (build-custom-el {:name     "diamond"
+                                                          :attrs    {:mode "Mod"}
+                                                          :children [(build-custom-el {:name "nomvar" :attrs {:name "M"}})
+                                                                     (build-custom-el {:name     "prop"
+                                                                                       :attrs    {:name "[*DEFAULT*]"}
+                                                                                       :children []})]
+                                                          })]})]}))
+
 (defn logical-form->entry [{:keys [::lex-spec/nomvar
                                    ::lex-spec/predicate
                                    ::lex-spec/diamonds]}]
-  (build-lf
-   (build-satop nomvar
-                (->> (map diamond->entry diamonds)
-                     (remove nil?) ;; If diamond doesn't have any children - we don't build it and we get null. Remove those
-                     (cons-fn build-prop predicate)))))
+  (if (nil? diamonds)
+    (build-custom-el {:name "lf"
+                      :children
+                      [(build-custom-el {:name "satop" :attrs {:nomvar "X"}
+                                         :children
+                                         [(build-custom-el {:name     "prop"
+                                                            :attrs    {:name "[*DEFAULT*]"}
+                                                            :children []})
+                                          ]})]})
+    (lf->entry nil)
+    
+    #_(build-lf
+      (build-satop nomvar
+                   (->> (map diamond->entry diamonds)
+                        (remove nil?) ;; If diamond doesn't have any children - we don't build it and we get null. Remove those
+                        (cons-fn build-prop predicate))))))
 
 (defn feature->entry
   [{:keys [::fs-spec/attribute
