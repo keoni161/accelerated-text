@@ -49,9 +49,7 @@
               (dsl/entry
                 "Primary"
                 (dsl/lf "X"
-                           (dsl/prop "{{TITLE}}")
-                           (dsl/diamond "Mod" {:nomvar "M"
-                                               :prop (dsl/prop "{{GOOD}}")}))
+                           (dsl/diamond "Mod" {:nomvar "M"}))
                 (dsl/>F
                   \^
                   (dsl/atomcat :NP {:inherits-from 2} (dsl/fs-nomvar "mod-index" "M"))
