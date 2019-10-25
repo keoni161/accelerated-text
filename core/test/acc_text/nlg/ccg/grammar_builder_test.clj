@@ -16,17 +16,13 @@
                 ["data-title" :--> "modifier-good"]}})
 
 (deftest morphology-builder
-  (is (= #{#::morph-spec{:word      "{{TITLE}}"
-                         :pos       :NP
-                         :class     "title"
-                         :predicate nil :macros nil}
-           #::morph-spec{:word      "{{GOOD}}"
-                         :pos       :ADJ
-                         :class     "modifier"
-                         :predicate nil :macros nil}}
+  (is (= #{#::morph-spec{:word "{{TITLE}}" :stem  "{{TITLE}}" :predicate "{{TITLE}}"
+                         :pos  :NP         :class "title"     :macros    nil}
+           #::morph-spec{:word "{{GOOD}}" :predicate "{{GOOD}}" :stem   "{{GOOD}}"
+                         :pos  :ADJ       :class     "modifier" :macros nil}}
          (sut/data-morphology tiny-semantic))))
 
 (deftest lexicon-builder
-  (is (= #{"title-NP" "modifier-ADJ"}
+  (is (= #{"title-NP"}
          (set (map ::lex-spec/name
                    (sut/base-families (sut/data-morphology tiny-semantic)))))))
