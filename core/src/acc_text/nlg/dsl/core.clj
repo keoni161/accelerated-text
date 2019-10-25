@@ -105,9 +105,8 @@
                  :pos       pos
                  :class     class
                  :predicate stem
+                 :stem      stem
                  :macros    macros})
-  ([word pos] #::morph-spec{:word  word
-                            :pos   pos
-                            :class nil :predicate nil :macros nil}))
+  ([word pos] (morph-entry word pos {:stem word :class nil :macros nil})))
 
 (defn macro [name fs] #::morph-spec{:name name :fs fs})
