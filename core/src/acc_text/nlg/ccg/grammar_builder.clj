@@ -31,26 +31,24 @@
 (defn base-families [morphology]
   (->> morphology
        (remove (fn [{pos ::morph-spec/pos}] (= :ADJ pos)))
-       (map-indexed
-         (fn [idx {word ::morph-spec/word pos ::morph-spec/pos class ::morph-spec/class}]
-           (dsl/family
-             (format "%s-%s" (name class) (name pos))
-             pos
-             true
-             (dsl/entry "primary"
-                        (dsl/lf word (dsl/prop "[*DEFAULT*]"))
-                        (dsl/atomcat pos {:index 2} (dsl/fs-nomvar "index" "X")))
-             (dsl/member word))))))
+       (map
+        (fn [{word ::morph-spec/word pos ::morph-spec/pos class ::morph-spec/class}]
+          (dsl/family
+           (format "%s-%s" (name class) (name pos))
+           pos true
+           (dsl/entry "primary"
+                      (dsl/lf word (dsl/prop "[*DEFAULT*]"))
+                      (dsl/atomcat pos {:index 2} (dsl/fs-nomvar "index" "X")))
+           (dsl/member word))))))
 
 (defn adj-family []
   (dsl/family "Modifier"
-              :ADJ
-              false
+              :ADJ false
               (dsl/entry
-                "Primary"
-                (dsl/lf "X"
-                        (dsl/prop "[*DEFAULT*]")
-                        (dsl/diamond "Mod" {:nomvar "M"
+               "Primary"
+               (dsl/lf "X"
+                       (dsl/prop "[*DEFAULT*]")
+                       (dsl/diamond "Mod" {:nomvar "M"
                                             :prop (dsl/prop "[*DEFAULT*]")
                                             }))
                 (dsl/>F
