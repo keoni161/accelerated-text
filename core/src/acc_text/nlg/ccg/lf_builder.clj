@@ -4,9 +4,6 @@
            org.jdom.input.SAXBuilder
            [org.jdom.output Format XMLOutputter]))
 
-(def she-buys-it-lf
-  "<xml> <lf> <satop nom=\"w1:action\"> <prop name=\"buy\"/> <diamond mode=\"tense\"> <prop name=\"pres\"/> </diamond> <diamond mode=\"Actor\"> <nom name=\"w0:animate-being\"/> <prop name=\"pro3f\"/> <diamond mode=\"num\"> <prop name=\"sg\"/> </diamond> </diamond> <diamond mode=\"Patient\"> <nom name=\"w2:thing\"/> <prop name=\"pro3n\"/> <diamond mode=\"num\"> <prop name=\"sg\"/> </diamond> </diamond> </satop> </lf> </xml>")
-
 (defn parse [lf]
   (.getRootElement 
     (.build (SAXBuilder.) (StringReader. lf))))

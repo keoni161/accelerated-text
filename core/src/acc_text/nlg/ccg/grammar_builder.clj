@@ -38,7 +38,7 @@
            pos true
            (dsl/entry "primary"
                       (dsl/lf word (dsl/prop "[*DEFAULT*]"))
-                      (dsl/atomcat pos {:index 2} (dsl/fs-nomvar "index" "X")))
+                      (dsl/atomcat pos {:index 1} (dsl/fs-nomvar "index" "X")))
            (dsl/member word))))))
 
 (defn adj-family []
@@ -53,8 +53,8 @@
                                             }))
                 (dsl/>F
                   \^
-                  (dsl/atomcat :NP {:inherits-from 2} (dsl/fs-nomvar "mod-index" "M"))
-                  (dsl/atomcat :NP {:index 2} (dsl/fs-nomvar "index" "X"))))))
+                  (dsl/atomcat :NP {:inherits-from 1} (dsl/fs-nomvar "mod-index" "M"))
+                  (dsl/atomcat :NP {:index 1} (dsl/fs-nomvar "index" "X"))))))
 
 (defn build-grammar [sem-graph]
   (let [morphology (data-morphology sem-graph)
@@ -65,9 +65,6 @@
     (ccg/build-grammar (map translate/family->entry families)
                        (map translate/morph->entry morphology)
                        [])))
-
-(defn realize-data-templates [grammar]
-  (ccg/generate grammar "{{GOOD}}" "{{TITLE}}"))
 
 (defn realize [grammar lf]
   (let [lf (Realizer/getLfFromElt lf)
