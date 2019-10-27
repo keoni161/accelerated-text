@@ -1,12 +1,15 @@
 (ns acc-text.nlg.ccg.grammar-builder-test
   (:require [acc-text.nlg.ccg.grammar-builder :as sut]
             [acc-text.nlg.ccg.logical-form-realizer :as lf-realizer]
-            [acc-text.nlg.ccg.ccg-debug :as ccg-debug]
             [clojure.test :refer [deftest is]]
             [acc-text.nlg.spec.lexicon :as lex-spec]
             [acc-text.nlg.spec.morphology :as morph-spec]))
 
-(def tiny-semantic
+(def single-fact-semantic-graph
+  {:nodes #{{:type :data :field :title :id "data-title"}}
+   :relations #{}})
+
+(def tiny-semantic-graph
   {:nodes     #{{:type :ROOT :id "ROOT"}
                 {:type :document-plan :id "document-plan"}
                 {:type :segment :id "segment"}
@@ -32,15 +35,21 @@
                          :pos  :NP         :class "title"     :macros    nil}
            #::morph-spec{:word "{{GOOD}}" :predicate "{{GOOD}}" :stem   "{{GOOD}}"
                          :pos  :ADJ       :class     "modifier" :macros nil}}
-         (sut/data-morphology tiny-semantic))))
+         (sut/data-morphology tiny-semantic-graph))))
 
 (deftest lexicon-builder
   (is (= #{"title-NP"}
          (set (map ::lex-spec/name
-                   (sut/base-families (sut/data-morphology tiny-semantic)))))))
+                   (sut/base-families (sut/data-morphology tiny-semantic-graph)))))))
 
-(deftest logical-form-realization
-  (let [g (sut/build-grammar tiny-semantic)
+(deftest logical-form-realization-for-single-fact-sg
+  (let [g (sut/build-grammar single-fact-semantic-graph)
+        sign (.getSign (lf-realizer/realize g))]
+    (is (= "NP" (.getPOS sign)))
+    (is (="{{TITLE}}" (.getOrthography sign)))))
+
+(deftest logical-form-realization-for-tiny-sg
+  (let [g (sut/build-grammar tiny-semantic-graph)
         sign (.getSign (lf-realizer/realize g))]
     (is (= "ADJ" (.getPOS sign)))
     (is (="{{GOOD}} {{TITLE}}" (.getOrthography sign)))))
