@@ -66,7 +66,3 @@
                        (map translate/morph->entry morphology)
                        [])))
 
-(defn realize [grammar lf]
-  (let [lf (Realizer/getLfFromElt lf)
-        r (Realizer. grammar)]
-    (.realize r lf nil)))

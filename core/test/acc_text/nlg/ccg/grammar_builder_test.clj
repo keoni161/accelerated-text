@@ -1,8 +1,9 @@
 (ns acc-text.nlg.ccg.grammar-builder-test
   (:require [acc-text.nlg.ccg.grammar-builder :as sut]
+            [acc-text.nlg.ccg.logical-form-realizer :as lf-realizer]
+            [acc-text.nlg.ccg.ccg-debug :as ccg-debug]
             [clojure.test :refer [deftest is]]
             [acc-text.nlg.spec.lexicon :as lex-spec]
-            [acc-text.nlg.ccg.lf-builder :as lf-builder]
             [acc-text.nlg.spec.morphology :as morph-spec]))
 
 (def tiny-semantic
@@ -16,14 +17,15 @@
                 ["segment" :--> "data-title"]
                 ["data-title" :--> "modifier-good"]}})
 
-(def good-title-lf
-  "<lf><satop nom=\"w1\">
-    <prop name=\"{{TITLE}}\"/>
-    <diamond mode=\"Mod\">
-      <nom name=\"w0\"/>
-      <prop name=\"{{GOOD}}\"/>
-    </diamond>
-  </satop></lf>")
+;; LF for the above graph used for realization
+;; <lf><satop nom=\"w1\">
+;;   <prop name=\"{{TITLE}}\"/>
+;;   <diamond mode=\"Mod\">
+;;     <nom name=\"w0\"/>
+;;     <prop name=\"{{GOOD}}\"/>
+;;   </diamond>
+;; </satop></lf>
+
 
 (deftest morphology-builder
   (is (= #{#::morph-spec{:word "{{TITLE}}" :stem  "{{TITLE}}" :predicate "{{TITLE}}"
@@ -39,6 +41,6 @@
 
 (deftest logical-form-realization
   (let [g (sut/build-grammar tiny-semantic)
-        sign (.getSign (sut/realize g (lf-builder/parse good-title-lf)))]
+        sign (.getSign (lf-realizer/realize g))]
     (is (= "ADJ" (.getPOS sign)))
     (is (="{{GOOD}} {{TITLE}}" (.getOrthography sign)))))
