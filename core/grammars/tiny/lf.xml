@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xml>
 <lf>
-
 	<satop nom="w1:action">
 		<prop name="buy"/>
 		<diamond mode="tense">

@@ -7,7 +7,9 @@
         lex (.lexicon grammar)]
     (doseq [word (.keySet (.getWords lex))]
       (doseq [sign (.getSignsSorted (.getSignsFromWord lex word))]
-        (translate/add-content lf-xml (.toXml (.getLF (.getCategory sign))))))
+        (prn "aa " (.getSupertag (.getTarget (.getCategory sign))))
+        (if (and (= "s" (.getSupertag (.getTarget (.getCategory sign)))))
+          (translate/add-content lf-xml (.toXml (.getLF (.getCategory sign)))))))
     (Realizer/getLfFromElt lf-xml)))
 
 (defn realize [grammar]

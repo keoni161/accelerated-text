@@ -29,17 +29,16 @@
            (dsl/member word))))))
 
 (defn event-family []
-  (dsl/family "Event"
-              :V false
-              (dsl/entry
-               "Primary"
-               (dsl/lf "E"
-                       (dsl/prop "[*DEFAULT*]")
-                       (dsl/diamond "ARG0" {:nomvar "X" :prop (dsl/prop "[*DEFAULT*]")})
-                       (dsl/diamond "ARG1" {:nomvar "Y" :prop (dsl/prop "[*DEFAULT*]")}))
-               (dsl/>F
-                \>
-                (dsl/<B
-                 (dsl/atomcat :S {} (dsl/fs-nomvar "index" "E"))
-                 (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "X")))
-                (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "Y"))))))
+  (dsl/family
+    "Event" :V false
+    (dsl/entry
+      "Primary"
+      (dsl/lf "E"
+              (dsl/prop "[*DEFAULT*]")
+              (dsl/diamond "ARG0" {:nomvar "X" :prop (dsl/prop "[*DEFAULT*]")})
+              (dsl/diamond "ARG1" {:nomvar "Y" :prop (dsl/prop "[*DEFAULT*]")}))
+      (dsl/>F
+        \>
+        (dsl/<B (dsl/atomcat :S {} (dsl/fs-nomvar "index" "E"))
+                (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "X")))
+        (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "Y"))))))

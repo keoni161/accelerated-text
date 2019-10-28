@@ -17,3 +17,6 @@
 
 (defmethod entry :dictionary-item [{{dic :name} :attributes}]
   (dsl/morph-entry (placeholder dic) :ADJ))
+
+(defmethod entry :amr [{value :value}]
+  (dsl/morph-entry (placeholder value) :V))

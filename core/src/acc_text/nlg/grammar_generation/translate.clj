@@ -195,16 +195,35 @@
                                          :children
                                          [(build-custom-el {:name     "prop"
                                                             :attrs    {:name "[*DEFAULT*]"}
-                                                            :children []})
-                                          ]})]})
+                                                            :children []})]})]})
+
     (= 1 (count diamonds)) (lf->entry lf)
+
+    (= 2 (count diamonds))
+
+    (build-custom-el
+      {:name "lf"
+       :children
+       [(build-custom-el
+          {:name "satop" :attrs {:nomvar nomvar}
+           :children
+           [(build-custom-el {:name     "prop"
+                              :attrs    {:name "[*DEFAULT*]"}
+                              :children []})
+            (build-custom-el {:name     "diamond"
+                              :attrs    {:mode "ARG0"}
+                              :children [(build-custom-el {:name "nomvar" :attrs {:name "X"}})]})
+            (build-custom-el {:name     "diamond"
+                              :attrs    {:mode "ARG1"}
+                              :children [(build-custom-el {:name "nomvar" :attrs {:name "Y"}})]})]})]})
 
     :else
     (build-lf
       (build-satop nomvar
                    (->> (map diamond->entry diamonds)
-                        (remove nil?) ;; If diamond doesn't have any children - we don't build it and we get null. Remove those
-                              (cons-fn build-prop predicate))))))
+                        ;; If diamond doesn't have any children - we don't build it and we get null. Remove those
+                        (remove nil?)
+                        (cons-fn build-prop predicate))))))
 
 (defn feature->entry
   [{:keys [::fs-spec/attribute

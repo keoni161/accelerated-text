@@ -26,17 +26,16 @@
                 :attributes {:name "good"}}]})
 
 (def verb-semantic-graph
-  {:nodes     #{{:type :ROOT :id "ROOT"}
-                {:type :document-plan :id "document-plan"}
-                {:type :segment :id "segment"}
-                {:type :data :field :author :id "data-author"}
-                {:type :data :field :title :id "data-title"}
-                {:type :event :dictionary :write :id "modifier-good"}}
-   :relations #{["ROOT" :--> "document-plan"]
-                ["document-plan" :--> "segment"]
-                ["segment" :--> "data-title"]
-                ["event" :--> "data-author"]
-                ["event" :--> "title-author"]}})
+  {:relations [{:from "01" :to "02" :role :segment}
+               {:from "02" :to "03" :role :instance}
+               {:from "03" :to "05" :role :amr}
+               {:from "05" :to "03" :role :arg0}
+               {:from "05" :to "04" :role :arg1}]
+   :concepts  [{:id "01" :type :document-plan}
+               {:id "02" :type :segment}
+               {:id "03" :type :data :value "title"}
+               {:id "04" :type :data :value "author"}
+               {:id "05" :type :amr :value "authorship"}]})
 
 ;; LF for the above graph used for realization
 ;; <lf><satop nom=\"w1\">
@@ -72,8 +71,8 @@
     (is (= "ADJ" (.getPOS sign)))
     (is (="{{GOOD}} {{TITLE}}" (.getOrthography sign)))))
 
-#_(deftest logical-form-realization-for-verb-sg
+(deftest logical-form-realization-for-verb-sg
   (let [g    (sut/build-grammar verb-semantic-graph)
         sign (.getSign (lf-realizer/realize g))]
-    (is (= "NP" (.getPOS sign)))
-    (is (="{{AUTHOR}} {{WRITE}} {{TITLE}}" (.getOrthography sign)))))
+    (is (= "V" (.getPOS sign)))
+    (is (="{{AUTHOR}} {{AUTHORSHIP}} {{TITLE}}" (.getOrthography sign)))))
