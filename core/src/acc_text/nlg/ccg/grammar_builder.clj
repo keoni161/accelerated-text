@@ -9,7 +9,7 @@
 
 (defn data-morphology [{nodes :nodes}]
   (->> nodes
-       (filter (fn [{t :type}] (get  #{:data :modifier} t)))
+       (filter (fn [{t :type}] (get  #{:event :data :modifier} t)))
        (map morph/entry)
        (set)))
 

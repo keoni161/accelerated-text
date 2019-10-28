@@ -10,7 +10,7 @@
   {:nodes #{{:type :data :field :title :id "data-title"}}
    :relations #{}})
 
-(def tiny-semantic-graph
+(def modifier-semantic-graph
   {:nodes     #{{:type :ROOT :id "ROOT"}
                 {:type :document-plan :id "document-plan"}
                 {:type :segment :id "segment"}
@@ -20,6 +20,19 @@
                 ["document-plan" :--> "segment"]
                 ["segment" :--> "data-title"]
                 ["data-title" :--> "modifier-good"]}})
+
+(def verb-semantic-graph
+  {:nodes     #{{:type :ROOT :id "ROOT"}
+                {:type :document-plan :id "document-plan"}
+                {:type :segment :id "segment"}
+                {:type :data :field :author :id "data-author"}
+                {:type :data :field :title :id "data-title"}
+                {:type :event :dictionary :write :id "modifier-good"}}
+   :relations #{["ROOT" :--> "document-plan"]
+                ["document-plan" :--> "segment"]
+                ["segment" :--> "data-title"]
+                ["event" :--> "data-author"]
+                ["event" :--> "title-author"]}})
 
 ;; LF for the above graph used for realization
 ;; <lf><satop nom=\"w1\">
@@ -36,12 +49,12 @@
                          :pos  :NP         :class "title"     :macros    nil}
            #::morph-spec{:word "{{GOOD}}" :predicate "{{GOOD}}" :stem   "{{GOOD}}"
                          :pos  :ADJ       :class     "modifier" :macros nil}}
-         (sut/data-morphology tiny-semantic-graph))))
+         (sut/data-morphology modifier-semantic-graph))))
 
 (deftest lexicon-builder
   (is (= #{"title-NP"}
          (set (map ::lex-spec/name
-                   (lex/base-families (sut/data-morphology tiny-semantic-graph)))))))
+                   (lex/base-families (sut/data-morphology modifier-semantic-graph)))))))
 
 (deftest logical-form-realization-for-single-fact-sg
   (let [g (sut/build-grammar single-fact-semantic-graph)
@@ -49,8 +62,14 @@
     (is (= "NP" (.getPOS sign)))
     (is (="{{TITLE}}" (.getOrthography sign)))))
 
-(deftest logical-form-realization-for-tiny-sg
-  (let [g (sut/build-grammar tiny-semantic-graph)
+(deftest logical-form-realization-for-modifier-sg
+  (let [g (sut/build-grammar modifier-semantic-graph)
         sign (.getSign (lf-realizer/realize g))]
     (is (= "ADJ" (.getPOS sign)))
     (is (="{{GOOD}} {{TITLE}}" (.getOrthography sign)))))
+
+(deftest logical-form-realization-for-verb-sg
+  (let [g    (sut/build-grammar verb-semantic-graph)
+        sign (.getSign (lf-realizer/realize g))]
+    (is (= "V" (.getPOS sign)))
+    (is (="{{AUTHOR}} {{WRITE}} {{TITLE}}" (.getOrthography sign)))))

@@ -9,6 +9,9 @@
 (defmethod entry :default [x]
   (prn "TODO morph for: " x))
 
+(defmethod entry :event [{dictionary :dictionary}]
+  (dsl/morph-entry (placeholder dictionary) :V {:stem (placeholder dictionary) :class "EVENT"}))
+
 (defmethod entry :data [{field :field}]
   (dsl/morph-entry (placeholder field) :NP {:stem (placeholder field) :class (name field)}))
 
