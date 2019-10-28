@@ -1,9 +1,10 @@
 (ns acc-text.nlg.ccg.grammar-builder-test
   (:require [acc-text.nlg.ccg.grammar-builder :as sut]
+            [acc-text.nlg.ccg.lexicon :as lex]
             [acc-text.nlg.ccg.logical-form-realizer :as lf-realizer]
-            [clojure.test :refer [deftest is]]
             [acc-text.nlg.spec.lexicon :as lex-spec]
-            [acc-text.nlg.spec.morphology :as morph-spec]))
+            [acc-text.nlg.spec.morphology :as morph-spec]
+            [clojure.test :refer [deftest is]]))
 
 (def single-fact-semantic-graph
   {:nodes #{{:type :data :field :title :id "data-title"}}
@@ -40,7 +41,7 @@
 (deftest lexicon-builder
   (is (= #{"title-NP"}
          (set (map ::lex-spec/name
-                   (sut/base-families (sut/data-morphology tiny-semantic-graph)))))))
+                   (lex/base-families (sut/data-morphology tiny-semantic-graph)))))))
 
 (deftest logical-form-realization-for-single-fact-sg
   (let [g (sut/build-grammar single-fact-semantic-graph)
