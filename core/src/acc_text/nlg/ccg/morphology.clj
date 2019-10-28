@@ -10,10 +10,10 @@
   (prn "TODO morph for: " x))
 
 (defmethod entry :event [{dictionary :dictionary}]
-  (dsl/morph-entry (placeholder dictionary) :V {:stem (placeholder dictionary) :class "EVENT"}))
+  (dsl/morph-entry (placeholder dictionary) :V))
 
-(defmethod entry :data [{field :field}]
-  (dsl/morph-entry (placeholder field) :NP {:stem (placeholder field) :class (name field)}))
+(defmethod entry :data [{value :value}]
+  (dsl/morph-entry (placeholder value) :NP))
 
-(defmethod entry :modifier [{dic :dictionary}]
-  (dsl/morph-entry (placeholder dic) :ADJ {:stem (placeholder dic) :class "modifier"}))
+(defmethod entry :dictionary-item [{{dic :name} :attributes}]
+  (dsl/morph-entry (placeholder dic) :ADJ))

@@ -19,9 +19,9 @@
   (->> morphology
        (remove (fn [{pos ::morph-spec/pos}] (= :ADJ pos)))
        (map
-        (fn [{word ::morph-spec/word pos ::morph-spec/pos class ::morph-spec/class}]
+        (fn [{word ::morph-spec/word pos ::morph-spec/pos}]
           (dsl/family
-           (format "%s-%s" (name class) (name pos))
+           (format "%s-%s" "base" (name pos))
            pos true
            (dsl/entry "primary"
                       (dsl/lf word (dsl/prop "[*DEFAULT*]"))

@@ -7,9 +7,9 @@
             [acc-text.nlg.ccg.lexicon :as lex]
             [acc-text.nlg.ccg.morphology :as morph]))
 
-(defn data-morphology [{nodes :nodes}]
-  (->> nodes
-       (filter (fn [{t :type}] (get  #{:event :data :modifier} t)))
+(defn data-morphology [{concepts :concepts}]
+  (->> concepts
+       (filter (fn [{t :type}] (get  #{:event :data :dictionary-item} t)))
        (map morph/entry)
        (set)))
 
