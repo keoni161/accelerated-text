@@ -14,10 +14,6 @@
 (defn xml-print [dom]
   (.outputString (XMLOutputter. (Format/getPrettyFormat) ) dom))
 
-(defn construct-lf []
-  (translate/build-lf
-   (translate/build-satop "X")))
-
 (defn lex-words [g]
   (let [lf-xml (translate/build-custom-el {:name "lf"})
         l (.lexicon g)
