@@ -17,7 +17,9 @@
 
 (defn base-families [morphology]
   (->> morphology
-       (remove (fn [{pos ::morph-spec/pos}] (= :ADJ pos)))
+       (group-by ::morph-spec/pos)
+       (remove (fn [[pos _]] (get #{:ADJ :V} pos)))
+       (mapcat (fn [[_ items]] items))
        (map
         (fn [{word ::morph-spec/word pos ::morph-spec/pos}]
           (dsl/family
