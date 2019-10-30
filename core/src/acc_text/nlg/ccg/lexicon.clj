@@ -20,13 +20,13 @@
        (group-by ::morph-spec/pos)
        (remove (fn [[pos _]] (get #{:ADJ :V} pos)))
        (mapcat (fn [[_ items]] items))
-       (map
-        (fn [{word ::morph-spec/word pos ::morph-spec/pos}]
+       (map-indexed
+        (fn [idx {word ::morph-spec/word pos ::morph-spec/pos}]
           (dsl/family
            (format "%s-%s" "base" (name pos))
            pos true
            (dsl/entry "primary"
-                      (dsl/lf word (dsl/prop "[*DEFAULT*]"))
+                      (dsl/lf (str "X" idx) (dsl/prop "[*DEFAULT*]"))
                       (dsl/atomcat pos {:index 1} (dsl/fs-nomvar "index" "X")))
            (dsl/member word))))))
 
@@ -37,10 +37,10 @@
       "Primary"
       (dsl/lf "E"
               (dsl/prop "[*DEFAULT*]")
-              (dsl/diamond "ARG0" {:nomvar "X" :prop (dsl/prop "[*DEFAULT*]")})
-              (dsl/diamond "ARG1" {:nomvar "Y" :prop (dsl/prop "[*DEFAULT*]")}))
+              (dsl/diamond "ARG0" {:nomvar "X0" :prop (dsl/prop "[*DEFAULT*]")})
+              (dsl/diamond "ARG1" {:nomvar "X1" :prop (dsl/prop "[*DEFAULT*]")}))
       (dsl/>F
         \>
         (dsl/<B (dsl/atomcat :S {} (dsl/fs-nomvar "index" "E"))
-                (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "X")))
-        (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "Y"))))))
+                (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "X0")))
+        (dsl/atomcat :NP {} (dsl/fs-nomvar "index" "X1"))))))
